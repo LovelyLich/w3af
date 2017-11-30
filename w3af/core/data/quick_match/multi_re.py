@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import re
 import esmre
+import uuid
 
 from acora import AcoraBuilder
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
@@ -57,6 +58,8 @@ class MultiRE(object):
         self._keyword_to_re = dict()
         self._regexes_with_no_keywords = list()
         self._acora = self._build()
+
+        file('/tmp/acora-re-%s.build' % (id(self),), 'w').write('%r' % (regexes_or_assoc,))
 
     def _build(self):
         builder = AcoraBuilder()
@@ -122,6 +125,8 @@ class MultiRE(object):
         :param target_str: The target string where the keywords need to be match
         :yield: (match_obj, re_str_N, compiled_regex)
         """
+        file('/tmp/acora-re-%s-%s.query' % (id(self), uuid.uuid4()), 'wb').write(target_str)
+
         if isinstance(target_str, unicode):
             target_str = target_str.encode(DEFAULT_ENCODING)
 

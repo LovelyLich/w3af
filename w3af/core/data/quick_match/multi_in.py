@@ -19,6 +19,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import uuid
+
 from acora import AcoraBuilder
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 
@@ -44,6 +46,8 @@ class MultiIn(object):
         self._keywords_or_assoc = keywords_or_assoc
         self._translator = dict()
         self._acora = self._build()
+
+        file('/tmp/acora-%s.build' % (id(self),), 'w').write('%r' % (keywords_or_assoc,))
 
     def _build(self):
         builder = AcoraBuilder()
@@ -75,6 +79,8 @@ class MultiIn(object):
         :param target_str: The target string where the keywords need to be match
         :yield: The matches (see __init__)
         """
+        file('/tmp/acora-%s-%s.query' % (id(self), uuid.uuid4()), 'wb').write(target_str)
+
         if isinstance(target_str, unicode):
             target_str = target_str.encode(DEFAULT_ENCODING)
 
